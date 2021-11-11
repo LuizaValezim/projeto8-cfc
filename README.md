@@ -1,6 +1,6 @@
 # Projeto 8 - Modulação em AM
 
-# Detalhes
+## Detalhes
 ### Disciplina: Camada Física da Computação - Engenharia da Computação INSPER
 ### Integrantes: Arthur Chieppe e Luiza Valezim
 ### Professor: Rodrigo Carareto
