@@ -25,6 +25,8 @@ portadora = np.cos(2*np.pi*freq_portadora*time)
 
 demoduled = file*portadora
 
+
+
 plt.title('Signal Demodulated')
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
