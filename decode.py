@@ -1,32 +1,40 @@
 import sounddevice as sd
 import soundfile as sf # Não estava conseguindo importar esse soundfile
+import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
-from suaBibSignal import signalMeu
+from suaBibSignal import SignalMeu
 from funcoes_LPF import *
 
-signal = signalMeu()
-fs = 44100
+signal = SignalMeu()
+fs = 44100 # Hz
 
-sd.default.samplerate = fs
+file, sample_rate = sf.read("afew_modulado.wav")
+
+signal = SignalMeu()
+signal.fs = sample_rate
+sd.default.samplerate = signal.fs
 sd.default.channels = 1
 
-reader = sf.read("file.wav")
-file = reader[0]
+lenSinal = len(file)
+time = np.linspace(0, lenSinal/fs, lenSinal)
+# time = len(file) / fs
 
-t = len(file) / fs
+freq_portadora = 14000 # Hz
+portadora = np.cos(2*np.pi*freq_portadora*time)
 
-portadora = 14e3
+demoduled = file*portadora
 
-portadoraT, portadoraY = signal.generateSin(portadora, 1, t, fs)
-demodulated_signal =  [x / y if y else 0 for x,y in zip(file, portadoraY)]
+plt.title('Signal Demodulated')
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude')
+plt.plot(time, demoduled)
+signal.plotFFT(demoduled, 'FFT Demodulated')
 
-band_amplitude = 4e3
-arquivo_filtrado = LPF(demodulated_signal, band_amplitude, fs)
+amplitude = 4000
+filtered = filtro(demoduled, fs, amplitude)
+signal.plotFFT(filtered, 'FFT Demodulated and Filtered')
 
-sd.play(arquivo_filtrado)
+sd.play(filtered, fs)
 sd.wait()
-
-signal.plotFFT(demodulated_signal, fs)
-signal.plotFFT(demodulated_signal, fs)
 plt.show()
